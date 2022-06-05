@@ -1,76 +1,48 @@
-#include <iostream>
-using namespace std;
+/*
+ * @lc app=leetcode.cn id=44 lang=cpp
+ *
+ * [44] 通配符匹配
+ */
 
+// @lc code=start
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
 class Solution
 {
 public:
     bool isMatch(string s, string p)
     {
-        auto allStars = [](const string &str, int left, int right)
+        int m = s.size(), n = p.size();
+        int i = 0, j = 0;
+        int iflag = 0, jflag = -1;
+
+        while (i < m)
         {
-            for (int i = left; i < right; ++i)
+            if (j < n && p[j] == '*')
             {
-                if (str[i] != '*')
-                {
-                    return false;
-                }
+                iflag = i;
+                jflag = j++;
             }
+            else if (j < n && (p[j] == '?' || p[j] == s[i]))
+            {
+                ++i;
+                ++j;
+            }
+            else if (jflag >= 0)
+            {
+                i = ++iflag;
+                j = jflag + 1;
+            }
+            else
+                return false;
+        }
+        while (j < n && p[j] == '*')
+            ++j;
+        if (j == n)
             return true;
-        };
-        auto charMatch = [](char u, char v)
-        {
-            return u == v || v == '?';
-        };
-
-        while (s.size() && p.size() && p.back() != '*')
-        {
-            if (charMatch(s.back(), p.back()))
-            {
-                s.pop_back();
-                p.pop_back();
-            }
-            else
-            {
-                return false;
-            }
-        }
-        if (p.empty())
-        {
-            return s.empty();
-        }
-
-        int sIndex = 0, pIndex = 0;
-        int sRecord = -1, pRecord = -1;
-        while (sIndex < s.size() && pIndex < p.size())
-        {
-            if (p[pIndex] == '*')
-            {
-                ++pIndex;
-                sRecord = sIndex;
-                pRecord = pIndex;
-            }
-            else if (charMatch(s[sIndex], p[pIndex]))
-            {
-                ++sIndex;
-                ++pIndex;
-            }
-            else if (sRecord != -1 && sRecord + 1 < s.size())
-            {
-                ++sRecord;
-                sIndex = sRecord;
-                pIndex = pRecord;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        return allStars(p, pIndex, p.size());
+        return false;
     }
 };
-
-int main(int argc, char const *argv[])
-{
-    Solution sol;
-    return 0;
-}
+// @lc code=end

@@ -14,6 +14,7 @@ class Solution
 public:
     vector<vector<int>> generateMatrix(int n)
     {
+        
         vector<vector<int>> ivec;
 
         if (n == 0)
@@ -22,7 +23,7 @@ public:
         }
         vector<int> row(n, 0);
         int i = n;
-        while (i--) //需要先赋值好，不然后面用pushback太费�?
+        while (i--) //需要先赋值好，不然后面用pushback太费�?
         {
             ivec.push_back(row);
         }
